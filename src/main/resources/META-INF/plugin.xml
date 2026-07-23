@@ -1,0 +1,24 @@
+<!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
+<idea-plugin>
+    <id>dev.gaphunter.spreadsheetcompanion</id>
+    <name>Spreadsheet Companion</name>
+    <vendor>Gap Hunter Labs</vendor>
+    <description><![CDATA[
+        <p>Edit CSV/TSV files in a real table — add and delete rows and columns, edit cells —
+        and view XLSX workbooks, without leaving the IDE.</p>
+        <p><b>Respects how your files open.</b> The table view is an extra tab next to the regular
+        text editor, never a forced replacement. Your CSV files keep opening exactly as before;
+        the table is there when you want it.</p>
+        <p>The XLSX viewer parses workbooks off the UI thread with a purpose-built lightweight
+        reader (no heavyweight office libraries bundled), so opening a spreadsheet never freezes
+        the IDE.</p>
+        <p>Free. No license nags, no tracking, no network access.</p>
+    ]]></description>
+
+    <depends>com.intellij.modules.platform</depends>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <fileEditorProvider implementation="dev.gaphunter.spreadsheetcompanion.ui.CsvTableEditorProvider"/>
+        <fileEditorProvider implementation="dev.gaphunter.spreadsheetcompanion.ui.XlsxViewerEditorProvider"/>
+    </extensions>
+</idea-plugin>
