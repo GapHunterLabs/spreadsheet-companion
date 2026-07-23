@@ -19,7 +19,6 @@ import javax.swing.JLabel
 import javax.swing.JPanel
 import javax.swing.JScrollPane
 import javax.swing.JTable
-import javax.swing.event.TableModelEvent
 import javax.swing.table.DefaultTableModel
 
 class CsvTableEditor(
@@ -50,10 +49,10 @@ class CsvTableEditor(
 
         loadFromDocument()
 
-        model.addTableModelListener { e ->
-            if (!syncing && e.type != TableModelEvent.HEADER_ROW) {
-                writeToDocument()
-            }
+        // Fires for cell edits AND structural changes (add/delete row or
+        // column); the syncing flag alone filters out our own reloads.
+        model.addTableModelListener {
+            if (!syncing) writeToDocument()
         }
         document?.addDocumentListener(object : DocumentListener {
             override fun documentChanged(event: DocumentEvent) {
