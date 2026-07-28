@@ -22,6 +22,6 @@
   lightweight JDK-only parser (no office libraries bundled) that runs off
   the UI thread so large workbooks never freeze the IDE.
 
-[Unreleased]: https://github.com/kendjm/spreadsheet-companion/compare/0.1.1...HEAD
-[0.1.1]: https://github.com/kendjm/spreadsheet-companion/compare/0.1.0...0.1.1
-[0.1.0]: https://github.com/kendjm/spreadsheet-companion/commits/0.1.0
+[Unreleased]: https://github.com/GapHunterLabs/spreadsheet-companion/compare/0.1.1...HEAD
+[0.1.1]: https://github.com/GapHunterLabs/spreadsheet-companion/compare/0.1.0...0.1.1
+[0.1.0]: https://github.com/GapHunterLabs/spreadsheet-companion/commits/0.1.0
