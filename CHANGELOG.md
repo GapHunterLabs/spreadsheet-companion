@@ -4,6 +4,12 @@
 
 ## [Unreleased]
 
+## [0.1.1]
+
+### Added
+
+- Gap Hunter Labs brand icon (`pluginIcon.svg` / `pluginIcon_dark.svg`).
+
 ## [0.1.0]
 
 ### Added
@@ -16,6 +22,6 @@
   lightweight JDK-only parser (no office libraries bundled) that runs off
   the UI thread so large workbooks never freeze the IDE.
 
-### On hold for a future release
-
-XLSX editing with format preservation.
+[Unreleased]: https://github.com/kendjm/spreadsheet-companion/compare/0.1.1...HEAD
+[0.1.1]: https://github.com/kendjm/spreadsheet-companion/compare/0.1.0...0.1.1
+[0.1.0]: https://github.com/kendjm/spreadsheet-companion/commits/0.1.0
