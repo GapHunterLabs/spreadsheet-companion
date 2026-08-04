@@ -1,0 +1,11 @@
+id,company,contact,email,plan,mrr,renewal_date,status
+1001,Northwind Traders,Elena Petrova,elena.petrova@northwind.com,Enterprise,4200,2026-09-14,Active
+1002,Contoso Retail,James Whitfield,j.whitfield@contoso.com,Growth,1150,2026-08-02,Active
+1003,Globex Corp,Priya Sharma,priya.sharma@globex.com,Enterprise,6800,2026-11-30,Active
+1004,Initech,Marco Rossi,marco.rossi@initech.com,Starter,290,2026-08-19,Past Due
+1005,Umbrella Labs,Aiko Tanaka,aiko.tanaka@umbrella-labs.com,Growth,1580,2026-10-05,Active
+1006,Soylent Corp,David Kim,david.kim@soylentcorp.com,Enterprise,5300,2026-09-27,Active
+1007,Wayne Analytics,Sofia Alvarez,sofia.alvarez@wayneanalytics.com,Growth,990,2026-07-31,Trialing
+1008,Stark Cloud,Liam O'Brien,liam.obrien@starkcloud.com,Enterprise,7400,2026-12-11,Active
+1009,Hooli Systems,Grace Nakamura,grace.nakamura@hooli.com,Starter,310,2026-08-08,Active
+1010,Acme Manufacturing,Tomas Novak,tomas.novak@acme-mfg.com,Growth,1420,2026-09-02,Cancelled

@@ -39,6 +39,11 @@ it corrupted XLSX files on save.
 - Open any `.xlsx` file → the workbook view opens with one tab per
   sheet.
 
+## Enterprise / Team Licensing
+
+Need enterprise features, custom spreadsheet workflows, or team
+licensing? Contact us at **kennyj.diazm@gmail.com**.
+
 ## Development
 
 ```
