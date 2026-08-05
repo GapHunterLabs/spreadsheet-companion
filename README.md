@@ -26,9 +26,21 @@ it corrupted XLSX files on save.
   parser — no Apache POI (the dependency would be many times larger
   than the plugin) and no work on the EDT, so a big workbook never
   freezes the IDE.
-- **XLSX stays read-only in 0.1.x on purpose.** Writing XLSX while
-  preserving formatting is exactly where the incumbent corrupts files.
-  Editing ships when it can be done safely, not before.
+- **XLSX writing is surgical, never a full regeneration.** Editing a
+  cell re-parses and rewrites only the one `sheetN.xml` ZIP entry that
+  changed; every other entry (styles, theme, `sharedStrings.xml`,
+  merged-cell ranges) is copied byte for byte, untouched. That is the
+  direct fix for "it corrupted my file on save" — the usual way that
+  bug happens is regenerating the whole workbook.
+- **Formula cells are read-only, not silently overwritten.** `.xlsx`
+  formulas aren't evaluated by this plugin; a cell that holds one
+  stays non-editable in the table so a manual edit can never drop the
+  formula and leave a stale cached value behind.
+- **Adding/deleting rows or columns in XLSX is out of scope for now.**
+  That requires re-flowing formula references and merged-cell ranges
+  correctly — a materially bigger, riskier feature than editing a
+  value in place. CSV/TSV already supports it via the toolbar; XLSX
+  editing is cell-value-only until that's designed properly.
 
 ## Usage
 
@@ -37,7 +49,8 @@ it corrupted XLSX files on save.
   and columns. Changes go straight into the document (undo works as
   usual).
 - Open any `.xlsx` file → the workbook view opens with one tab per
-  sheet.
+  sheet. Edit any cell that isn't a formula directly in the table —
+  changes save straight to the `.xlsx` file, no separate save step.
 
 ## Enterprise / Team Licensing
 
