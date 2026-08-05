@@ -13,7 +13,7 @@ class XlsxViewerEditorProvider : FileEditorProvider, DumbAware {
         file.extension?.lowercase() == "xlsx"
 
     override fun createEditor(project: Project, file: VirtualFile): FileEditor =
-        XlsxViewerEditor(file)
+        XlsxViewerEditor(project, file)
 
     override fun getEditorTypeId(): String = "spreadsheet-companion-xlsx-viewer"
 

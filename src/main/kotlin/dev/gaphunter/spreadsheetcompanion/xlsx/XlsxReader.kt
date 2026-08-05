@@ -12,6 +12,10 @@ import org.xml.sax.helpers.DefaultHandler
 data class XlsxSheet(
     val name: String,
     val rows: List<List<String>>,
+    // (row, col), both 0-indexed, for every cell that holds a formula (<f>).
+    // XlsxWriter refuses to overwrite these; the viewer uses this to keep
+    // them non-editable rather than silently discarding the formula.
+    val formulaCells: Set<Pair<Int, Int>> = emptySet(),
 )
 
 data class XlsxWorkbook(
@@ -41,7 +45,8 @@ object XlsxReader {
         for ((index, name) in sheetNames.withIndex()) {
             val entryName = "xl/worksheets/sheet${index + 1}.xml"
             val sheetXml = entries[entryName] ?: continue
-            sheets.add(XlsxSheet(name, parseSheet(sheetXml, sharedStrings)))
+            val parsed = parseSheet(sheetXml, sharedStrings)
+            sheets.add(XlsxSheet(name, parsed.rows, parsed.formulaCells))
         }
         if (sheets.isEmpty()) {
             throw XlsxFormatException("Workbook contains no readable sheets")
@@ -121,9 +126,12 @@ object XlsxReader {
         return strings
     }
 
-    private fun parseSheet(xml: ByteArray, sharedStrings: List<String>): List<List<String>> {
+    private class ParsedSheet(val rows: List<List<String>>, val formulaCells: Set<Pair<Int, Int>>)
+
+    private fun parseSheet(xml: ByteArray, sharedStrings: List<String>): ParsedSheet {
         // rowIndex -> (columnIndex -> value); the grid is sparse in the file.
         val cells = mutableMapOf<Int, MutableMap<Int, String>>()
+        val formulaCells = mutableSetOf<Pair<Int, Int>>()
         var maxRow = -1
         var maxCol = -1
 
@@ -133,6 +141,7 @@ object XlsxReader {
             var currentType = ""
             var inValue = false
             var inInlineText = false
+            var hasFormula = false
             val value = StringBuilder()
 
             override fun startElement(uri: String?, localName: String?, qName: String, attributes: Attributes) {
@@ -144,11 +153,17 @@ object XlsxReader {
                         val ref = attributes.getValue("r")
                         currentCol = if (ref != null) columnIndexOf(ref) else currentCol + 1
                         currentType = attributes.getValue("t") ?: ""
+                        hasFormula = false
                         value.setLength(0)
                     }
                     qName == "v" || qName.endsWith(":v") -> inValue = true
                     // inline strings: <c t="inlineStr"><is><t>text</t></is></c>
                     qName == "t" || qName.endsWith(":t") -> inInlineText = true
+                    // <c><f>SUM(A1:A2)</f><v>3</v></c> -- a formula cell. The cached
+                    // <v> (if present) is still read as the displayed value, but the
+                    // cell must never be silently overwritten (that would drop the
+                    // formula and leave a stale/contradictory <v> behind).
+                    qName == "f" || qName.endsWith(":f") -> hasFormula = true
                 }
             }
 
@@ -161,26 +176,37 @@ object XlsxReader {
                     qName == "v" || qName.endsWith(":v") -> inValue = false
                     qName == "t" || qName.endsWith(":t") -> inInlineText = false
                     qName == "c" || qName.endsWith(":c") -> {
-                        if (value.isNotEmpty() && currentRow >= 0 && currentCol >= 0) {
-                            val text = when (currentType) {
-                                "s" -> sharedStrings.getOrNull(value.toString().toIntOrNull() ?: -1) ?: ""
-                                "b" -> if (value.toString() == "1") "TRUE" else "FALSE"
-                                else -> value.toString()
+                        if (currentRow >= 0 && currentCol >= 0) {
+                            if (hasFormula) {
+                                formulaCells.add(currentRow to currentCol)
                             }
-                            cells.getOrPut(currentRow) { mutableMapOf() }[currentCol] = text
-                            if (currentRow > maxRow) maxRow = currentRow
-                            if (currentCol > maxCol) maxCol = currentCol
+                            // A formula with no recalculated cached <v> yet must still
+                            // count towards the sheet's used range, or the cell would
+                            // be invisible in the grid and its formula-guard moot.
+                            if (value.isNotEmpty() || hasFormula) {
+                                if (currentRow > maxRow) maxRow = currentRow
+                                if (currentCol > maxCol) maxCol = currentCol
+                            }
+                            if (value.isNotEmpty()) {
+                                val text = when (currentType) {
+                                    "s" -> sharedStrings.getOrNull(value.toString().toIntOrNull() ?: -1) ?: ""
+                                    "b" -> if (value.toString() == "1") "TRUE" else "FALSE"
+                                    else -> value.toString()
+                                }
+                                cells.getOrPut(currentRow) { mutableMapOf() }[currentCol] = text
+                            }
                         }
                     }
                 }
             }
         })
 
-        if (maxRow < 0) return emptyList()
-        return (0..maxRow).map { r ->
+        if (maxRow < 0) return ParsedSheet(emptyList(), emptySet())
+        val rows = (0..maxRow).map { r ->
             val rowCells = cells[r]
             (0..maxCol).map { c -> rowCells?.get(c) ?: "" }
         }
+        return ParsedSheet(rows, formulaCells)
     }
 
     /** "B7" -> 1, "AA3" -> 26. The digits (row part) are ignored. */
