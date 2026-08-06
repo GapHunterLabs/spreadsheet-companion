@@ -4,6 +4,20 @@
 
 ## [Unreleased]
 
+## [0.1.3]
+
+### Added
+
+- XLSX cell editing: surgical single-sheet-entry rewrite — re-parses and
+  rewrites only the one worksheet ZIP entry that changed, while every
+  other entry (styles, theme, sharedStrings, merged ranges) is copied
+  byte for byte. Formula cells (`<f>`) are flagged by the reader and
+  stay read-only, so editing never leaves a cell in an ambiguous
+  formula/value state.
+
+[Unreleased]: https://github.com/GapHunterLabs/spreadsheet-companion/compare/0.1.3...HEAD
+[0.1.3]: https://github.com/GapHunterLabs/spreadsheet-companion/compare/0.1.2...0.1.3
+
 ## [0.1.2]
 
 ### Changed
