@@ -55,7 +55,7 @@ it corrupted XLSX files on save.
 ## Enterprise / Team Licensing
 
 Need enterprise features, custom spreadsheet workflows, or team
-licensing? Contact us at **kennyj.diazm@gmail.com**.
+licensing? Contact us at **gaphunterlabs@gmail.com**.
 
 ## Development
 
