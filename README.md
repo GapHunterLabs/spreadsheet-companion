@@ -4,6 +4,13 @@ IntelliJ-family plugin. Edit CSV/TSV files in a real table and view XLSX
 workbooks — without leaving the IDE, and without the plugin taking over
 your files.
 
+![Spreadsheet Companion: Edit CSV/TSV in a real table and view XLSX workbooks, without the plugin taking over your files](docs/media/hero.gif)
+
+Each feature on its own:
+[Your CSV, as a table](docs/media/01-csv-table.gif) ·
+[Add and delete rows](docs/media/02-edit-rows.gif) ·
+[XLSX workbooks](docs/media/03-xlsx.gif)
+
 ## Why it exists
 
 Born from real evidence in JetBrains Marketplace reviews, not
