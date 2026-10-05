@@ -59,10 +59,12 @@ it corrupted XLSX files on save.
   sheet. Edit any cell that isn't a formula directly in the table —
   changes save straight to the `.xlsx` file, no separate save step.
 
-## Enterprise / Team Licensing
+## Support
 
-Need enterprise features, custom spreadsheet workflows, or team
-licensing? Contact us at **gaphunterlabs@gmail.com**.
+- **Bugs and feature requests:** [GitHub Issues](https://github.com/GapHunterLabs/spreadsheet-companion/issues)
+- **Questions, or custom rules for a team's codebase:** **gaphunterlabs@gmail.com**
+- **Security vulnerabilities:** report privately as described in [SECURITY.md](SECURITY.md), not in a public issue.
+- **Privacy and network behavior:** [PRIVACY.md](PRIVACY.md)
 
 ## Development
 
